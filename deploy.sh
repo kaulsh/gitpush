@@ -2,11 +2,11 @@
 set -euo pipefail
 
 REPO_NAME="$1"
-REPO="/home/kaulsh/repos/${REPO_NAME}.git"
-WORK="$(mktemp -d)"
-RUNTIME_BASE="/home/kaulsh/runtime"
-DEFAULT_BRANCH="main"
 CERT_DOMAIN="shashank.gg"
+
+REPO="$HOME/repos/${REPO_NAME}.git"
+WORK="$(mktemp -d)"
+DEFAULT_BRANCH="main"
 
 cleanup() {
   rm -rf "$WORK"
@@ -120,8 +120,6 @@ while read -r oldrev newrev ref; do
   fi
 
   parse_deploy_toml
-
-  APP_RUNTIME_DIR="${RUNTIME_BASE}/${APP_NAME}"
 
   case "$APP_TYPE" in
     static)
