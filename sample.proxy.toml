@@ -1,0 +1,8 @@
+name = "sample-webserver"
+type = "proxy"
+hosts = ["sample-webserver.domain.tld"]
+port = 3000
+
+[build]
+dockerfile_path = "Dockerfile"
+docker_volumes = ["/absolute/path/to/data/sample-webserver:/app/data"]

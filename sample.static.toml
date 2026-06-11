@@ -1,0 +1,7 @@
+name = "sample-static-site"
+type = "static"
+hosts = ["sample-static-site.domain.tld"]
+
+[build]
+command = "pnpm build"
+build_location = "./build"
