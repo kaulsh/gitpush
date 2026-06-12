@@ -2,11 +2,11 @@
 set -euo pipefail
 
 REPO_NAME="$1"
-CERT_DOMAIN="shashank.gg"
 
-REPO="$HOME/repos/${REPO_NAME}.git"
+REPO="${DEPLOY_REPOS_LOCATION:-$HOME/repos}/${REPO_NAME}.git"
 WORK="$(mktemp -d)"
 DEFAULT_BRANCH="main"
+NGINX_CERTS_DIR="/etc/nginx/certs"
 
 cleanup() {
   rm -rf "$WORK"
@@ -43,9 +43,30 @@ parse_deploy_toml() {
   return 0
 }
 
+cert_domain_from_host() {
+  local host="$1"
+  local -a parts
+  local count
+  IFS='.' read -r -a parts <<< "$host"
+  count="${#parts[@]}"
+
+  if (( count >= 2 )); then
+    printf '%s.%s\n' "${parts[count - 2]}" "${parts[count - 1]}"
+  else
+    printf '%s\n' "$host"
+  fi
+}
+
 write_nginx_config() {
   local CONF="/etc/nginx/conf.d/${APP_NAME}.conf"
-  local CERT_DIR="/etc/nginx/certs/${CERT_DOMAIN}"
+  local FIRST_HOST="${APP_HOST%% *}"
+  local CERT_DOMAIN
+
+  [[ -z "$FIRST_HOST" ]] && { echo "deploy.toml: 'hosts' is required" >&2; exit 1; }
+
+  CERT_DOMAIN="$(cert_domain_from_host "$FIRST_HOST")"
+  
+  local CERT_DIR="${NGINX_CERTS_DIR}/${CERT_DOMAIN}"
 
   local SSL_LINES="
     listen 443 ssl;
