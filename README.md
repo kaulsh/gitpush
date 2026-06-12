@@ -92,10 +92,10 @@ Notes:
 
 - `deploy.sh` expects the universal NGINX convention for configurations where every config file with a `.conf` extension in `/etc/nginx/conf.d/` is loaded by default.
 - It writes HTTPS NGINX configs using the first hostname in `hosts`.
-- Set up certs on your VPS any way you'd like (Follow [my TLS setup](#my-tls-setup) if you'd like). The script expects certs for NGINX `server_name` values to be in `/etc/nginx/certs/server_name_dir/*`. Don't forget to generate a `dhparam.pem` for every domain.
+- Set up certs on your VPS (Follow [my TLS setup](#my-tls-setup) if you like). The script expects certs for NGINX `server_name` values to be in `/etc/nginx/certs/server_name_dir/*`. Don't forget to generate a `dhparam.pem` for every domain.
 - It determines the `server_name_dir` using the first value from the `hosts` setting in your `.toml` config file. It drops the subdomain and uses the remaining domain as the cert directory.
   
-  For example, for `hosts=["example.com","www.example./com"]` it expects the files:
+  For example, for `hosts=["www.example.com","example.com"]` it expects the files:
 
 	```text
 	/etc/nginx/certs/example.com/fullchain.cer
