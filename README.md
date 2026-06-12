@@ -82,7 +82,7 @@ How it works:
 	git remote add vps vps:/path/to/repos/repository-name.git
 	```
 
-6. Now create a config file in `repository-name`. Refer to `sample.proxy.toml` or `sample.static.toml` to see supported configurations.
+6. Now create a config file `deploy.toml` in the repository. Refer to `sample.proxy.toml` or `sample.static.toml` to see supported configurations. Remember that the config file should also be committed to the repo!
 
 7. `git push vps localbranch:main`
 
