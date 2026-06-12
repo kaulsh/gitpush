@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec /home/kaulsh/repos/.scripts/deploy.sh "$(basename $(pwd) .git)" "$@"
