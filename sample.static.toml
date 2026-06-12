@@ -1,7 +1,13 @@
+# Unique name for this app. Used as the Docker image/container name and the NGINX config filename.
 name = "sample-static-site"
+# "static" syncs the build output to /var/www/<name> and serves it via NGINX.
 type = "static"
+# List of hostnames for the NGINX server_name. The first entry is used to determine the TLS cert directory.
 hosts = ["sample-static-site.domain.tld"]
 
 [build]
+# Shell command to build the project. Runs in the repo root before syncing.
 command = "pnpm build"
+# Directory (relative to repo root) whose contents are synced to /var/www/<name>.
+# Defaults to "./" if omitted.
 build_location = "./build"

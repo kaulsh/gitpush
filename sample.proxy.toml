@@ -1,8 +1,18 @@
+# Unique name for this app. Used as the Docker image/container name and the NGINX config filename.
 name = "sample-webserver"
+# "proxy" builds a Docker image and runs it as a container bound to 127.0.0.1:<port>,
+# with NGINX proxying public traffic to it.
 type = "proxy"
+# List of hostnames for the NGINX server_name. The first entry is used to determine the TLS cert directory.
 hosts = ["sample-webserver.domain.tld"]
+# Port the container listens on. The app must bind to 0.0.0.0:<port> (not only localhost)
+# so that Docker and NGINX can reach it.
+# Exposed as: -p 127.0.0.1:<port>:<port>
 port = 3000
 
 [build]
+# Path to the Dockerfile relative to the repo root. Defaults to "Dockerfile" if omitted.
 dockerfile_path = "Dockerfile"
+# Optional list of volume mounts passed to `docker run -v`. Host-side directories are
+# created automatically with `sudo mkdir -p` before the container starts.
 docker_volumes = ["/absolute/path/to/data/sample-webserver:/app/data"]
