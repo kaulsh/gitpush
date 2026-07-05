@@ -149,8 +149,18 @@ while read -r oldrev newrev ref; do
       [[ -n "$BUILD_CMD" ]] && eval "$BUILD_CMD"
       
       sudo rsync -a --delete "${BUILD_OUT%/}/" "${SERVE_DIR}/"
-      
-      sudo restorecon -Rv "$SERVE_DIR" 2>/dev/null || true
+      sudo chmod 755 "$SERVE_DIR"
+
+      # Fedora/RHEL: nginx needs httpd_sys_content_t; restorecon alone is not
+      # enough until semanage defines a file context for this path.
+      if command -v restorecon >/dev/null 2>&1; then
+        if command -v semanage >/dev/null 2>&1; then
+          sudo semanage fcontext -a -t httpd_sys_content_t "${SERVE_DIR}(/.*)?" 2>/dev/null \
+            || sudo semanage fcontext -m -t httpd_sys_content_t "${SERVE_DIR}(/.*)?" 2>/dev/null \
+            || true
+        fi
+        sudo restorecon -Rv "$SERVE_DIR" 2>/dev/null || true
+      fi
 
       write_nginx_config
       
